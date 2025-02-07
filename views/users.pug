@@ -1,0 +1,20 @@
+doctype html
+html
+  head
+    title Daftar Users
+  body
+    h1 Daftar Users
+    table(border="1")
+      tr
+        th ID
+        th Nama Lengkap
+        th Alamat
+      if users && users.length > 0
+        each user in users
+          tr
+            td= user.id
+            td= user.full_name
+            td= user.address
+      else
+        tr
+          td(colspan="3") Tidak ada data pengguna

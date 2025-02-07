@@ -2,33 +2,26 @@ const express = require('express');
 const app = express();
 const port = 4000;
 const bodyParser = require('body-parser');
-// const client = require('./databasepg')
 
 
 // Database
 const db = require('./config/databasepg');
 
 // Test db connection
-db.authenticate()
-    .then(() => console.log('Connection has been established successfully.'))
-    .catch (error => console.log('Unable to connect to the database:'+ error))
+// db.authenticate()
+//     .then(() => console.log('Connection has been established successfully.'))
+//     .catch (error => console.log('Unable to connect to the database:'+ error))
+
+// Set Pug sebagai template engine
+app.set('view engine', 'pug');
+app.set('views', './views'); // Direktori untuk file .pug
 
 // END POINT/ ROUTES/ URL
-
 app.use(bodyParser.json())
 app.get('/', (req, res) => {
-    // client.query('select * from users', (err, result)=>{
-    //     if(!err){
-    //         console.log(result.rows);
-    //     }else {
-    //         console.log(err.message);
-    //     }
-    //     client.end;
-    //     res.send(result)
-    // })
-    res.send('UTAMA')
+    res.render('users'); // Render file views/users.pug
   
-})
+});
 
 // Users routes
 app.use('/users', require('./routes/users'));
@@ -52,6 +45,13 @@ app.put('/username', (req, res) => {
     res.send('Update berhasil')
   })
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+// Mulai server
+app.listen(port, async () => {
+  try {
+    await db.authenticate();
+    console.log('Koneksi ke database berhasil.');
+    console.log(`Server berjalan di http://localhost:${port}`);
+  } catch (err) {
+    console.error('Gagal terhubung ke database:', err);
+  }
+});
